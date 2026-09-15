@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI YouTube Auto Editor - iOS & Android Cross-Platform Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+    body {
+      background-color: #0D0E15;
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #12131C;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #000;
+      font-weight: 700;
+    }
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      width: 100%;
+      flex: 1;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #6C5CE7 0%, #3C2A9B 100%);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .hero-banner p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: #161824;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #00CEC9;
+    }
+    .dropzone {
+      border: 2px dashed rgba(108, 92, 231, 0.5);
+      background: rgba(108, 92, 231, 0.05);
+      border-radius: 14px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dropzone:hover {
+      border-color: #00CEC9;
+      background: rgba(0, 206, 201, 0.05);
+    }
+    .format-selector {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .format-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px;
+      border-radius: 12px;
+      color: #FFF;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .format-btn.active {
+      background: rgba(108, 92, 231, 0.25);
+      border-color: #6C5CE7;
+      color: #00CEC9;
+      font-weight: 700;
+    }
+    .video-preview-box {
+      width: 100%;
+      height: 320px;
+      background: #000;
+      border-radius: 16px;
+      border: 2px solid #6C5CE7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(108, 92, 231, 0.2);
+    }
+    .subtitle-overlay {
+      position: absolute;
+      bottom: 24px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #FFF;
+      font-size: 0.9rem;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #00CEC9 0%, #00B894 100%);
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      color: #000;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 206, 201, 0.3);
+      transition: transform 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+    .hashtag-pill {
+      display: inline-block;
+      background: rgba(108, 92, 231, 0.2);
+      border: 1px solid rgba(108, 92, 231, 0.4);
+      color: #A29BFE;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .status-alert {
+      display: none;
+      background: rgba(0, 206, 201, 0.15);
+      border: 1px solid #00CEC9;
+      color: #00CEC9;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      🎬 AI YouTube Auto Editor
+      <span class="logo-badge">iOS & AOS Studio</span>
+    </div>
+    <div style="font-size: 0.85rem; color: #A29BFE;">Gemini Multimodal + Whisper STT + FFmpeg</div>
+  </header>
+
+  <main>
+    <div class="hero-banner">
+      <h1>휴대폰 영상을 선택하면 자동 편집 & 자막 & 유튜브 게시 완료!</h1>
+      <p>AI가 영상 속 인물, 음성, 하이라이트를 탐지하여 무음 구간을 자르고 예능 자막과 최적화 해시태그를 생성해 유튜브로 바로 업로드합니다.</p>
+    </div>
+
+    <div class="grid-layout">
+      <!-- Left Column: Input & Video Studio -->
+      <div class="card">
+        <div class="card-title">📱 1. 휴대폰 원본 동영상 선택</div>
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('videoInput').click()">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">📹</div>
+          <div style="font-weight: 700; margin-bottom: 4px;" id="fileText">스마트폰 촬영 영상 파일 클릭하여 업로드</div>
+          <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">MP4, MOV, 4K 지원 (iOS / Android 갤러리)</div>
+          <input type="file" id="videoInput" accept="video/*" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+
+        <div style="margin-top: 20px;" class="card-title">🎯 2. 유튜브 게시 포맷 선택</div>
+        <div class="format-selector">
+          <div class="format-btn active" id="btnShorts" onclick="setFormat('shorts')">
+            <div>📱 Shorts</div>
+            <div style="font-size: 0.75rem; opacity: 0.6;">9:16 세로 숏폼</div>
+          </div>
+          <div class="format-btn" id="btnLongform" onclick="setFormat('longform')">
+            <div>📺 롱폼 영상</div>
+            <div style="font-size: 0.75rem; opacity: 0.6;">16:9 가로 동영상</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: AI Analysis & Preview -->
+      <div class="card">
+        <div class="card-title">⚡ 3. AI 미리보기 & 메타데이터</div>
+        <div class="video-preview-box" id="previewBox">
+          <div style="font-size: 3rem; color: #00CEC9;">▶</div>
+          <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 8px;" id="previewText">Shorts (9:16) AI 렌더링 미리보기</div>
+          <div class="subtitle-overlay">🔥 AI 예능 자막: 오늘 촬영한 소중한 영상입니다!</div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <label style="font-size: 0.85rem; color: #A29BFE; font-weight: 600;">Gemini AI 추천 유튜브 제목</label>
+          <input type="text" class="input-field" id="titleInput" value="🔥 AI가 분석한 오늘의 하이라이트 순간!">
+
+          <label style="font-size: 0.85rem; color: #A29BFE; font-weight: 600;">자동 추출된 SEO 해시태그</label>
+          <div style="margin-top: 6px; margin-bottom: 16px;">
+            <span class="hashtag-pill">#Shorts</span>
+            <span class="hashtag-pill">#AI자동편집</span>
+            <span class="hashtag-pill">#스마트폰촬영</span>
+            <span class="hashtag-pill">#유튜브스튜디오</span>
+            <span class="hashtag-pill">#자동자막</span>
+            <span class="hashtag-pill">#하이라이트</span>
+          </div>
+
+          <button class="btn-primary" onclick="startPublishing()">🚀 유튜브에 자동 편집 영상 업로드하기</button>
+
+          <div class="status-alert" id="statusAlert">
+            🎉 유튜브 게시 완료! <br>
+            <span style="font-size: 0.85rem; opacity: 0.8;">영상 링크: <a href="https://youtube.com/shorts/AI_DEMO_VID_889" target="_blank" style="color: #FFF;">https://youtube.com/shorts/AI_DEMO_VID_889</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentFormat = 'shorts';
+
+    function setFormat(fmt) {
+      currentFormat = fmt;
+      document.getElementById('btnShorts').classList.toggle('active', fmt === 'shorts');
+      document.getElementById('btnLongform').classList.toggle('active', fmt === 'longform');
+      
+      const previewBox = document.getElementById('previewBox');
+      const previewText = document.getElementById('previewText');
+
+      if (fmt === 'shorts') {
+        previewBox.style.height = '320px';
+        previewText.innerText = 'Shorts (9:16) AI 렌더링 미리보기';
+      } else {
+        previewBox.style.height = '200px';
+        previewText.innerText = '롱폼 (16:9) AI 렌더링 미리보기';
+      }
+    }
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        document.getElementById('fileText').innerText = `선택된 영상: ${file.name}`;
+      }
+    }
+
+    function startPublishing() {
+      const alertBox = document.getElementById('statusAlert');
+      alertBox.style.display = 'block';
+      alertBox.innerHTML = `⌛ FFmpeg 인코딩 & 유튜브 OAuth 업로드 진행 중...`;
+
+      setTimeout(() => {
+        const link = currentFormat === 'shorts' ? 'https://youtube.com/shorts/AI_DEMO_VID_889' : 'https://youtu.be/AI_DEMO_VID_889';
+        alertBox.innerHTML = `🎉 유튜브 게시 성공!<br><span style="font-size: 0.85rem; opacity: 0.9;">게시 완료 링크: <a href="${link}" target="_blank" style="color: #FFF; font-weight:700;">${link}</a></span>`;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
