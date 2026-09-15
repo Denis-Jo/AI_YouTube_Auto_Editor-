@@ -17,17 +17,31 @@ def main():
     client_secrets_file = Config.YOUTUBE_CLIENT_SECRETS_FILE
     token_file = os.path.join(BASE_DIR, "token.json")
 
-    # Check client_secret.json
+    # Check client_secret.json from Env
     env_secret_json = os.environ.get("YOUTUBE_CLIENT_SECRET_JSON", "")
     if env_secret_json and not os.path.exists(client_secrets_file):
         with open(client_secrets_file, "w", encoding="utf-8") as f:
             f.write(env_secret_json)
-        print("[+] YOUTUBE_CLIENT_SECRET_JSON 환경변수로부터 client_secret.json을 복원했습니다.")
+        print("[+] YOUTUBE_CLIENT_SECRET_JSON 환경변수로부터 client_secret.json을 생성했습니다.")
 
+    # If file still missing, prompt interactive paste
     if not os.path.exists(client_secrets_file):
-        print("\n❌ 오류: backend/client_secret.json 인증키 파일이 없습니다.")
-        print("💡 Google Cloud Console에서 다운로드받은 client_secret.json을 backend 폴더에 놓아주세요.")
-        sys.exit(1)
+        print("\n⚠️ backend/client_secret.json 파일이 컴퓨터에 존재하지 않습니다.")
+        print("💡 Google Cloud에서 다운로드한 client_secret.json 내용(JSON 텍스트)을 붙여넣어 주세요.\n")
+        try:
+            pasted_json = input("👉 JSON 내용 붙여넣기 (입력 후 Enter): ").strip()
+            if pasted_json:
+                # Basic JSON validation
+                parsed = json.loads(pasted_json)
+                with open(client_secrets_file, "w", encoding="utf-8") as f:
+                    json.dump(parsed, f, indent=2)
+                print("✅ client_secret.json 저장 완료!\n")
+            else:
+                print("❌ 유효한 JSON 내용이 입력되지 않았습니다.")
+                sys.exit(1)
+        except Exception as e:
+            print(f"❌ JSON 형식 오류: {e}")
+            sys.exit(1)
 
     try:
         from google_auth_oauthlib.flow import InstalledAppFlow
@@ -45,7 +59,7 @@ def main():
             f.write(creds.to_json())
 
         print("=" * 60)
-        print("🎉 인증 성공! token.json 파일이 생성되었습니다.")
+        print("🎉 인증 성공! token.json 파일이 정상 생성되었습니다.")
         print(f"📁 저장 위치: {token_file}")
         print("=" * 60)
 
