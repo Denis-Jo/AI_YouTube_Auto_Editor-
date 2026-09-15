@@ -16,9 +16,11 @@ backend/output/*
 !backend/output/.gitkeep
 
 # Credentials & Secrets
-client_secret.json
+client_secret*.json
+*.json.json
 token.json
 *.pem
+
 
 # IDE & OS
 .DS_Store

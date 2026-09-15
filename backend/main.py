@@ -203,12 +203,14 @@ async def auto_pipeline(
         "title": title,
         "youtube_url": yt_result.get("video_url", ""),
         "youtube_id": yt_result.get("video_id", ""),
+        "is_simulated": yt_result.get("is_simulated", False),
         "format_type": format_type,
         "rendered_video_path": rendered_output_path,
         "preview_url": f"/output/{os.path.basename(rendered_output_path)}",
         "hashtags": hashtags,
         "message": "원클릭 AI 영상 편집 및 유튜브 게시 파이프라인 완수!"
     }
+
 
 # Static file servers
 app.mount("/output", StaticFiles(directory=Config.OUTPUT_DIR), name="output")
