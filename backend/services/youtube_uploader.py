@@ -31,8 +31,19 @@ class YouTubeUploader:
             from googleapiclient.http import MediaFileUpload
             from google_auth_oauthlib.flow import InstalledAppFlow
 
+            # Check if client_secret json is provided via Environment Variable
+            env_secret_json = os.environ.get("YOUTUBE_CLIENT_SECRET_JSON", "")
+            if env_secret_json and not os.path.exists(self.client_secrets_file):
+                try:
+                    with open(self.client_secrets_file, "w", encoding="utf-8") as f:
+                        f.write(env_secret_json)
+                    print("[YouTubeUploader] Created client_secret.json from YOUTUBE_CLIENT_SECRET_JSON env var")
+                except Exception as e:
+                    print(f"[YouTubeUploader Error writing env secret] {e}")
+
             if not os.path.exists(self.client_secrets_file):
                 raise FileNotFoundError(f"OAuth 인증 파일({self.client_secrets_file})이 없습니다.")
+
 
             flow = InstalledAppFlow.from_client_secrets_file(self.client_secrets_file, self.scopes)
             credentials = flow.run_local_server(port=0)
