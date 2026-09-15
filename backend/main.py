@@ -225,8 +225,14 @@ if os.path.exists(Config.PWA_DIR):
         return FileResponse(os.path.join(Config.PWA_DIR, "sw.js"), media_type="application/javascript")
 
     @app.get("/")
+    @app.get("/index.html")
     def read_root():
         return FileResponse(os.path.join(Config.PWA_DIR, "index.html"))
+
+    @app.get("/favicon.ico")
+    def get_favicon():
+        return FileResponse(os.path.join(Config.PWA_DIR, "icons", "icon-192.png"))
+
 
 if __name__ == "__main__":
     import uvicorn
