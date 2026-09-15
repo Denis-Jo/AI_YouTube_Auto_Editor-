@@ -873,8 +873,14 @@
 
 
     function publishFromStudio() {
-      alert('AI 스튜디오 설정으로 유튜브 게시 요청을 등록하였습니다!');
+      if (!selectedFile) {
+        alert('휴대폰 갤러리 또는 카메라에서 업로드할 동영상을 먼저 선택해 주세요!');
+        return;
+      }
+      switchTab('auto');
+      runAutoPipeline();
     }
+
   </script>
 </body>
 </html>
