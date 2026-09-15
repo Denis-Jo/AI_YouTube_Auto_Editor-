@@ -855,12 +855,21 @@
           releaseBox.style.display = 'block';
           btn.disabled = false;
 
+          const previewContainer = document.getElementById('renderedVideoPreviewContainer');
+          const player = document.getElementById('renderedPlayer');
+
+          if (selectedFile) {
+            previewContainer.style.display = 'block';
+            player.src = URL.createObjectURL(selectedFile);
+          }
+
           document.getElementById('demoNoticeBadge').style.display = 'block';
           document.getElementById('releaseYoutubeLink').style.display = 'none';
           document.getElementById('releaseTitle').innerText = '🎉 AI 영상 컷편집 & 자막 생성 완료!';
         }, 1000);
       }
     }
+
 
 
     function publishFromStudio() {
